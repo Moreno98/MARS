@@ -61,13 +61,16 @@ def select(root, model, min_layer):
     for l in range(min_layer, len(acc)):
         mean = torch.cat([acc[l], rej[l]], dim=0).mean(dim=0)
         metrics[l] = score_layer(acc[l] - mean, rej[l] - mean, safe_val[l] - mean, cont[l] - mean, cop[l] - mean)
-    # min-max normalise each metric across layers, then sum
+    # min-max normalise each metric across layers
+    minmax = lambda v: (v - v.min()) / (v.max() - v.min() + 1e-8)
     for k in METRICS:
-        v = np.array([metrics[l][k] for l in metrics])
-        for l in metrics:
-            metrics[l][k] = (metrics[l][k] - v.min()) / (v.max() - v.min() + 1e-8)
-    for l in metrics:
-        metrics[l]['score'] = sum(metrics[l][k] for k in METRICS)
+        v = minmax(np.array([metrics[l][k] for l in metrics]))
+        for l, x in zip(metrics, v):
+            metrics[l][k] = x
+    # context separability: the two HarmBench subsets combined into a single score
+    separation = minmax(np.array([metrics[l]['cont_separation'] + metrics[l]['cop_separation'] for l in metrics]))
+    for l, s in zip(metrics, separation):
+        metrics[l]['score'] = metrics[l]['direction_consistency'] + s + metrics[l]['safe_text_margin']
     return max(metrics, key=lambda l: metrics[l]['score']), metrics, len(acc)
 
 def main():
