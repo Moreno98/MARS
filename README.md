@@ -221,11 +221,10 @@ python tables/make_tables.py   # create tables from results/ ("–" for missing 
 If you find this work useful for your research, please cite it:
 
 ```bibtex
-@misc{dinca2026harnessingtextualrefusaldirections,
-      title={Harnessing Textual Refusal Directions for Multimodal Safety}, 
-      author={Moreno D'Incà and Nicu Sebe and Massimiliano Mancini},
-      year={2026},
-      eprint={2606.31876},
-      archivePrefix={arXiv},
+@inproceedings{dinca2026harnessingtextualrefusaldirections,
+    title     = {Harnessing Textual Refusal Directions for Multimodal Safety},
+    author    = {D'Inc{\`a}, Moreno and Sebe, Nicu and Mancini, Massimiliano},
+    booktitle = {Advances in Neural Information Processing Systems},
+    year      = {2026},
 }
 ```
